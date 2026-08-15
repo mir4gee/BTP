@@ -1,0 +1,30 @@
+# docker-compose wrapper for the CPU dev image.
+#
+# Typical use:
+#   docker compose build
+#   docker compose run --rm dev pytest tests/
+#   docker compose run --rm dev bash scripts/setup_baseline.sh
+#
+# The repo is volume-mounted so edits on the host reflect inside the container
+# with no rebuild. data/, checkpoints/, and results/ are gitignored but
+# persisted across container runs via the same mount.
+
+services:
+  dev:
+    build: .
+    image: riemann-gfm:cpu
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      # Cache pip downloads across container recreations to speed up rebuilds.
+      - pip-cache:/root/.cache/pip
+    environment:
+      - PYTHONPATH=/workspace/src
+      # Deterministic runs when we exercise the pipeline locally.
+      - PYTHONHASHSEED=0
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+
+volumes:
+  pip-cache:

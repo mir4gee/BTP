@@ -1,0 +1,20 @@
+# Downstream evaluation config used by scripts/eval_table1.sh
+node_classification:
+  datasets: [citeseer, pubmed, github, airports]
+  metric: [accuracy, weighted_f1]
+  probe: logistic_regression
+  probe_max_iter: 2000
+
+link_prediction:
+  datasets: [citeseer, pubmed, github, airports]
+  metric: [auc, ap]
+  scorer: dot_product
+  test_frac: 0.1
+  val_frac: 0.05
+  negatives_per_pos: 1
+
+fewshot:
+  datasets: [citeseer, pubmed, github, airports]
+  shots: [1, 5]
+  n_trials: 5
+  seed: 0

@@ -1,0 +1,27 @@
+# Pre-training config — mirrors third_party/RiemannGFM/scripts/pretrain.sh
+model:
+  d_H: 32
+  d_S: 32
+  kappa_H: -1.0
+  kappa_S: 1.0
+  n_layers: 2
+  hidden: 256
+  dropout: 0.1
+
+training:
+  lr: 0.01
+  weight_decay: 0.0
+  batch_size: 32
+  epochs: 3
+  iters_per_dataset: 3
+  seed: 42
+
+sampler:
+  tree_depth: 2
+  cycle_max_len: 6
+
+datasets:
+  # Order matters — matches the paper's default and produces the same checkpoint id.
+  - ogbn-arxiv
+  - computers
+  - physics
