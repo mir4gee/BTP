@@ -9,31 +9,45 @@ Reproduction of *RiemannGFM: Learning a Graph Foundation Model from Riemannian G
 
 ## Quick start
 
-Two workflows are supported:
+Three tracks are supported. Track A verifies code correctness locally, tracks B and C both run on Colab and produce the paper's numbers using different codebases.
 
 ### A. Local development (CPU Docker)
 
-Used for reading the code, running unit tests, and smoke-testing pipelines. No training happens here.
+Read the code, run unit tests, smoke-test pipelines. No real training.
 
 ```bash
 docker compose build
-docker compose run --rm dev pytest tests/                # unit tests
-docker compose run --rm dev bash scripts/setup_baseline.sh
+docker compose run --rm dev pytest tests/
 ```
 
-### B. Training on Colab (GPU)
+### B. Baseline reproduction on Colab (official code)
 
-All Table 1–4 reproductions run on Colab. Notebooks:
+`baseline_reproduction/` runs the **paper authors' own code** on Colab. Use this to get ground-truth numbers we can compare against.
 
 | Notebook | Purpose |
 |----------|---------|
-| `00_install.ipynb` | pip-install pinned deps, mount Drive |
-| `01_pretrain.ipynb` | Pre-train on ogbn-arxiv + Computers + Physics (Table 1 recipe) |
-| `02_downstream_nc.ipynb` | Node classification — Table 1 NC columns |
-| `03_downstream_lp.ipynb` | Link prediction — Table 1 LP columns |
-| `04_fewshot.ipynb` | 1-shot / 5-shot — Table 3 |
-| `05_ablations.ipynb` | Geometric ablations — Table 2 / Table 7 |
-| `06_pretrain_impact.ipynb` | Alternative pre-training data — Table 4 |
+| `baseline_reproduction/notebooks/00_setup.ipynb` | Clone official repo, install pinned deps, mount Drive |
+| `baseline_reproduction/notebooks/01_pretrain.ipynb` | Run `scripts/pretrain.sh` — ogbn-arxiv + Computers + Physics |
+| `baseline_reproduction/notebooks/02_nc.ipynb` | Node classification — Table 1 NC columns |
+| `baseline_reproduction/notebooks/03_lp.ipynb` | Link prediction — Table 1 LP columns |
+| `baseline_reproduction/notebooks/04_fewshot.ipynb` | 1-shot / 5-shot — Table 3 |
+| `baseline_reproduction/notebooks/05_results_summary.ipynb` | Parse logs, build a paper-vs-ours comparison CSV |
+
+See `baseline_reproduction/README.md` for details.
+
+### C. Our reimplementation on Colab (`src/riemann_gfm/`)
+
+Same experiments but using our own from-scratch code.
+
+| Notebook | Purpose |
+|----------|---------|
+| `notebooks/00_install.ipynb` | pip-install pinned deps, mount Drive |
+| `notebooks/01_pretrain.ipynb` | Pre-train on ogbn-arxiv + Computers + Physics |
+| `notebooks/02_downstream_nc.ipynb` | Node classification — Table 1 NC columns |
+| `notebooks/03_downstream_lp.ipynb` | Link prediction — Table 1 LP columns |
+| `notebooks/04_fewshot.ipynb` | 1-shot / 5-shot — Table 3 |
+| `notebooks/05_ablations.ipynb` | Geometric ablations — Table 2 / Table 7 |
+| `notebooks/06_pretrain_impact.ipynb` | Alternative pre-training data — Table 4 |
 
 Checkpoints and downloaded datasets are stored under `MyDrive/RiemannGFM/` so they survive session resets.
 

@@ -30,6 +30,10 @@ results/*.pth
 results/**/logs/
 results/**/*.log
 
+# baseline_reproduction results are drive-backed on Colab; don't commit them.
+baseline_reproduction/results/
+baseline_reproduction/checkpoints/
+
 *.ckpt
 *.pt
 *.pth
