@@ -6,10 +6,11 @@ Reproduction of *RiemannGFM: Learning a Graph Foundation Model from Riemannian G
 - **Architecture / equation ↔ code map.** [`docs/architecture_notes.md`](docs/architecture_notes.md).
 - **Implementation log.** [`docs/implementation_notes.md`](docs/implementation_notes.md).
 - **Official repo (baseline).** <https://github.com/RiemannGraph/RiemannGFM> — cloned into `third_party/` (gitignored) by `scripts/setup_baseline.sh`.
+- **R-GFM reproduction (related work).** <https://github.com/USTC-DataDarknessLab/R-GFM> — a follow-up GFM cited alongside RiemannGFM; reproduced independently in [`rgfm_reproduction/`](rgfm_reproduction/README.md) on Colab.
 
 ## Quick start
 
-Three tracks are supported. Track A verifies code correctness locally, tracks B and C both run on Colab and produce the paper's numbers using different codebases.
+Three tracks are supported. Track A verifies code correctness locally, tracks B and C both run on Colab and produce the paper's numbers using different codebases. A fourth, independent track (`rgfm_reproduction/`) reproduces a different but related paper, R-GFM — see its own README.
 
 ### A. Local development (CPU Docker)
 

@@ -34,6 +34,10 @@ results/**/*.log
 baseline_reproduction/results/
 baseline_reproduction/checkpoints/
 
+# rgfm_reproduction results are drive-backed on Colab; don't commit them.
+rgfm_reproduction/results/
+rgfm_reproduction/checkpoints/
+
 *.ckpt
 *.pt
 *.pth
