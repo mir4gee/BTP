@@ -32,6 +32,11 @@ rgfm_reproduction/
 4. Open `03_link_prediction.ipynb` for the 7-dataset link-prediction table.
 5. Open `04_results_summary.ipynb` to build the comparison table/CSV.
 
+**Do you need to run all of these in one Colab session?** Only `00_setup.ipynb`'s *effects* need to exist in whatever runtime you use — not its Python variables. Colab normally gives each opened notebook its own fresh runtime, so `01`–`03` don't rely on shared memory from `00_setup`; each one redeclares its own `REPO_DIR`/`DATA_DIR`/etc. and checks that the cloned repo + built CUDA extension actually exist on disk, raising a clear error telling you to (re-)run `00_setup.ipynb` if not. Two things persist independently of which runtime you're in:
+- **Drive** (`/content/drive/MyDrive/R-GFM/...`) — datasets, checkpoints, and result logs. Genuinely persistent.
+- **`/content/R-GFM`** (the git clone, pip installs, the built `.so`) — local VM disk, wiped whenever you get a *new* runtime (new session, or after a disconnect/timeout). If `01`/`02`/`03` throw the "repo / built CUDA extension not found" error, that means this is a fresh runtime and you need to run `00_setup.ipynb` again *in it* before continuing — the clone+install+build only take a couple of minutes, it's just annoying to repeat.
+- `04_results_summary.ipynb` only reads log files from Drive, so it has no such dependency — it'll work in any runtime once Drive is mounted.
+
 ## Repo caveats found while preparing this track
 
 - The official README references a `requirements.txt` that **does not exist** in the repo (verified against the `main` branch tree). `00_setup.ipynb` installs the dependency set inferred from actual source imports instead: `torch==2.8.0`, `torch_geometric`, `torch_scatter`/`torch_sparse` (via the matching PyG wheel index), `geoopt`, `ogb`, `scikit-learn`.
