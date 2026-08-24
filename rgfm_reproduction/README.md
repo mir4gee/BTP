@@ -14,6 +14,7 @@ This machine's GPU is a 4GB RTX 3050; the paper's experiments ran on A100 80GB G
 rgfm_reproduction/
 ├── README.md                        # this file
 ├── notebooks/
+│   ├── full_reproduction.ipynb       # everything below, merged into ONE notebook — run this if you just want it all
 │   ├── 00_setup.ipynb                # clone repo, install deps, build CUDA ext, mount Drive
 │   ├── 01_node_classification.ipynb  # 1-shot NC, leave-one-dataset-out — Table 1
 │   ├── 02_fewshot.ipynb              # 3-shot / 5-shot NC — Tables 2 & 3
@@ -22,9 +23,19 @@ rgfm_reproduction/
 └── results/                           # gitignored — logs and captured metrics (Drive-backed)
 ```
 
-**No committed copy of the official code.** `00_setup.ipynb` clones `github.com/USTC-DataDarknessLab/R-GFM` at runtime into Colab's `/content/R-GFM/`, matching the `baseline_reproduction/` convention of not mingling upstream code with ours.
+**No committed copy of the official code.** `00_setup.ipynb` (and `full_reproduction.ipynb`) clone `github.com/USTC-DataDarknessLab/R-GFM` at runtime into Colab's `/content/R-GFM/`, matching the `baseline_reproduction/` convention of not mingling upstream code with ours.
 
-## Usage
+## Usage — the fast path: one notebook
+
+Open `notebooks/full_reproduction.ipynb` in Colab, switch runtime to GPU, run all cells top to bottom. It's `00`–`04` merged into a single file — no cross-notebook runtime tracking to think about, since it's one continuous kernel. It reproduces Tables 1, 2, 3, and 9 (all node-classification shot settings + link prediction) and ends with a paper-vs-ours comparison table. Its own first cell lists exactly what it does and doesn't cover (a few paper figures/tables genuinely aren't reproducible from the released code — see that cell for why).
+
+If you hit a GPU-quota wall partway through: just stop. Every training loop in it skips a dataset whose result log already exists, so re-running the same notebook from the top after quota resets picks up where you left off — only Section 0 (repo clone / pip installs / CUDA build) must fully redo, since that's ephemeral VM state, not Drive-backed.
+
+## Usage — the modular path: separate notebooks per stage
+
+Prefer smaller, separately-run pieces (e.g. across different Colab sessions/days) instead of one long notebook? Use `00`–`04` individually:
+
+**If Colab cuts you off on GPU quota mid-run:** just terminate — logs for any dataset cell that already finished (printed its final `Test Accuracy:` / `[Test] Acc ...` line) are already saved under Drive and are safe. Only the cell that was actively running when you stopped is lost. When you come back (quota resets on a rolling window for free tier; Pro/Pro+ has more headroom): re-run `00_setup.ipynb` fresh (the repo/build don't survive a new runtime — see below), then in `01`/`03` skip cells for datasets whose log already exists under `RESULTS_DIR` on Drive; `02`'s loop cells already skip automatically if a log exists.
 
 1. Open `notebooks/00_setup.ipynb` in Colab, switch runtime to GPU, run all cells. Clones the repo, installs dependencies (inferred from actual imports — see caveat below), builds the CUDA extension, mounts Drive.
 2. Open `01_node_classification.ipynb`, run. 8 datasets × leave-one-dataset-out pretraining + 1-shot fine-tuning — expect this to take a while per dataset (150 epochs of Stage-1 + Stage-2 training on 7-9 source graphs each time).
